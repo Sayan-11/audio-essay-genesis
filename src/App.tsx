@@ -28,14 +28,14 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <SubscriptionProvider>
-        <ThemeProvider>
-          <PlayerProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
+        <SubscriptionProvider>
+          <ThemeProvider>
+            <PlayerProvider>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/login" element={<Login />} />
@@ -50,12 +50,12 @@ const App = () => (
                   {/* 404 route */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
-              </BrowserRouter>
-            </TooltipProvider>
-          </PlayerProvider>
-        </ThemeProvider>
-      </SubscriptionProvider>
-    </AuthProvider>
+              </TooltipProvider>
+            </PlayerProvider>
+          </ThemeProvider>
+        </SubscriptionProvider>
+      </AuthProvider>
+    </BrowserRouter>
   </QueryClientProvider>
 );
 
