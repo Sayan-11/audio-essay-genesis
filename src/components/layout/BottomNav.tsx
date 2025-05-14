@@ -4,6 +4,13 @@ import { Link, useLocation } from 'react-router-dom';
 import { Volume, User, History } from 'lucide-react';
 import { usePlayer } from '@/contexts/PlayerContext';
 
+// Define a more accurate Audio type that includes currentTime
+interface AudioWithProgress {
+  title: string;
+  duration: number;
+  currentTime: number;
+}
+
 const BottomNav = () => {
   const location = useLocation();
   const { currentAudio, isPlaying } = usePlayer();
@@ -27,7 +34,8 @@ const BottomNav = () => {
               <div 
                 className="h-full bg-pod-green-500 rounded-full" 
                 style={{ 
-                  width: `${currentAudio ? (currentAudio.duration > 0 ? (currentAudio.currentTime / currentAudio.duration) * 100 : 0) : 0}%` 
+                  width: `${currentAudio && 'currentTime' in currentAudio && 'duration' in currentAudio ? 
+                    (currentAudio.duration > 0 ? (currentAudio.currentTime / currentAudio.duration) * 100 : 0) : 0}%` 
                 }}
               ></div>
             </div>
