@@ -9,7 +9,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
   // For debugging
   useEffect(() => {
-    console.log('ProtectedRoute - Auth state:', { isAuthenticated, isLoading, path: location.pathname });
+    console.log('ProtectedRoute - Auth state:', { 
+      isAuthenticated, 
+      isLoading, 
+      path: location.pathname,
+      sessionExists: localStorage.getItem('openpod_user') !== null
+    });
   }, [isAuthenticated, isLoading, location]);
 
   if (isLoading) {
@@ -23,7 +28,10 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
-  if (!isAuthenticated) {
+  // Check localStorage as a backup in case context isn't updated
+  const hasLocalStorageUser = localStorage.getItem('openpod_user') !== null;
+  
+  if (!isAuthenticated && !hasLocalStorageUser) {
     // Store the attempted URL for redirecting after login
     return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }

@@ -33,7 +33,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const savedUser = localStorage.getItem('openpod_user');
         
         if (savedUser) {
+          console.log('Restored user from localStorage:', savedUser);
           setUser(JSON.parse(savedUser));
+        } else {
+          console.log('No user found in localStorage');
         }
       } catch (error) {
         console.error("Error checking auth state:", error);

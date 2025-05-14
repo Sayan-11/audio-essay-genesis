@@ -14,9 +14,18 @@ const Login = () => {
   // Get redirect path from location state or default to dashboard
   const from = location.state?.from || '/dashboard';
   
-  // If user is already authenticated, redirect them
   useEffect(() => {
-    if (isAuthenticated && !isLoading) {
+    // Check for user in localStorage as a fallback
+    const userInStorage = localStorage.getItem('openpod_user') !== null;
+    console.log('Login page - Auth check:', { 
+      isAuthenticated, 
+      isLoading, 
+      userInStorage, 
+      redirectTo: from 
+    });
+    
+    // If user is already authenticated, redirect them
+    if ((isAuthenticated || userInStorage) && !isLoading) {
       console.log('Login page - Already authenticated, redirecting to:', from);
       navigate(from, { replace: true });
     }
