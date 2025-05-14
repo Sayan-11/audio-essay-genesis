@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useSubscription } from '@/contexts/SubscriptionContext';
 import { usePlayer, Audio } from '@/contexts/PlayerContext';
 import { Button } from '@/components/ui/button';
-import { Slider } from '@/components/ui/slider';
+import LengthSelector from '@/components/ui/LengthSelector';
 import {
   Select,
   SelectContent,
@@ -44,6 +44,7 @@ const AudioGenerator = () => {
   const [suggestion, setSuggestion] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [length, setLength] = useState(3); // in minutes
+  const [lengthOption, setLengthOption] = useState("short");
   const [voice, setVoice] = useState('sarah');
   const [ambient, setAmbient] = useState('none');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -52,7 +53,14 @@ const AudioGenerator = () => {
   const { addAudio, playAudio } = usePlayer();
   
   const typingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   
+  // Handle length option change
+  const handleLengthChange = (option: string, minutes: number) => {
+    setLengthOption(option);
+    setLength(minutes);
+  };
+
   // Setup typing animation for suggestions
   useEffect(() => {
     let currentIndex = 0;
@@ -160,41 +168,38 @@ const AudioGenerator = () => {
     <div className="py-6">
       <div className="relative mb-6">
         <input
+          ref={inputRef}
           type="text"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="What would you like to hear about?"
-          className="w-full p-4 pr-12 text-lg rounded-xl border-2 border-pod-green-200 focus:border-pod-green-500 focus:ring-pod-green-500 focus:outline-none transition-colors bg-white"
+          placeholder=""
+          className="w-full p-4 pr-12 text-lg rounded-xl border-2 border-pod-green-200 focus:border-pod-green-500 focus:ring-pod-green-500 focus:outline-none transition-colors bg-white dark:bg-pod-green-800 dark:border-pod-green-700 dark:text-white"
         />
         {isTyping && prompt === '' && (
           <div className="absolute left-4 top-4 text-lg prompt-suggestions pointer-events-none">
             {suggestion}
           </div>
         )}
+        {!isTyping && prompt === '' && !suggestion && (
+          <div className="absolute left-4 top-4 text-lg pointer-events-none text-gray-400 dark:text-gray-500">
+            What would you like to hear about?
+          </div>
+        )}
       </div>
       
       <div className="space-y-6 mb-8">
-        <div>
-          <label className="block text-sm font-medium mb-2 text-gray-700">
-            Length: {length} minutes
-          </label>
-          <Slider
-            value={[length]}
-            min={1}
-            max={10}
-            step={1}
-            onValueChange={(values) => setLength(values[0])}
-            className="w-full"
-          />
-        </div>
+        <LengthSelector 
+          value={lengthOption} 
+          onValueChange={handleLengthChange}
+        />
         
         <div>
-          <label className="block text-sm font-medium mb-2 text-gray-700">Voice</label>
+          <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Voice</label>
           <Select value={voice} onValueChange={setVoice}>
-            <SelectTrigger className="w-full bg-white border-pod-green-200">
+            <SelectTrigger className="w-full bg-white dark:bg-pod-green-800 border-pod-green-200 dark:border-pod-green-600">
               <SelectValue placeholder="Select a voice" />
             </SelectTrigger>
-            <SelectContent className="bg-white">
+            <SelectContent className="bg-white dark:bg-pod-green-800">
               {VOICES.map((voiceOption) => (
                 <SelectItem key={voiceOption.id} value={voiceOption.id}>
                   {voiceOption.name}
@@ -205,12 +210,12 @@ const AudioGenerator = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-medium mb-2 text-gray-700">Ambient Sound</label>
+          <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Ambient Sound</label>
           <Select value={ambient} onValueChange={setAmbient}>
-            <SelectTrigger className="w-full bg-white border-pod-green-200">
+            <SelectTrigger className="w-full bg-white dark:bg-pod-green-800 border-pod-green-200 dark:border-pod-green-600">
               <SelectValue placeholder="Select ambient sound" />
             </SelectTrigger>
-            <SelectContent className="bg-white">
+            <SelectContent className="bg-white dark:bg-pod-green-800">
               {AMBIENT_SOUNDS.map((sound) => (
                 <SelectItem key={sound.id} value={sound.id}>
                   {sound.name}
@@ -231,7 +236,7 @@ const AudioGenerator = () => {
         </Button>
       </div>
       
-      <div className="mt-4 text-center text-sm text-gray-500">
+      <div className="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
         {audioGenerated}/{limits.audioLimit} audios generated this month
       </div>
     </div>

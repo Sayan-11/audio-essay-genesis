@@ -46,7 +46,7 @@
   }
 
   .dark {
-    --background: 152 60% 10%;
+    --background: 152 60% 8%;
     --foreground: 210 40% 98%;
 
     --card: 152 60% 10%;
@@ -92,7 +92,7 @@
   }
   
   .glass-morph {
-    @apply backdrop-blur-md bg-white/20 border border-white/30 shadow-lg;
+    @apply backdrop-blur-md bg-white/20 border border-white/30 shadow-lg dark:bg-black/20 dark:border-white/10;
   }
 
   .bottom-tab-active {
@@ -100,6 +100,13 @@
   }
 
   .prompt-suggestions {
-    @apply text-pod-green-600 opacity-50;
+    @apply text-pod-green-600 opacity-50 dark:text-pod-green-400;
+  }
+  
+  .length-chip {
+    @apply px-4 py-2 rounded-full border-2 border-pod-green-200 text-sm font-medium cursor-pointer transition-colors
+    hover:border-pod-green-400
+    data-[state=active]:bg-pod-green-500 data-[state=active]:text-white data-[state=active]:border-pod-green-500
+    dark:border-pod-green-700 dark:data-[state=active]:bg-pod-green-600 dark:data-[state=active]:border-pod-green-600;
   }
 }

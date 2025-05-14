@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { PlayerProvider } from "./contexts/PlayerContext";
 import { SubscriptionProvider } from "./contexts/SubscriptionContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 // Pages
 import Index from "./pages/Index";
@@ -29,28 +30,30 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <SubscriptionProvider>
-        <PlayerProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/pricing" element={<PricingPage />} />
+        <ThemeProvider>
+          <PlayerProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/pricing" element={<PricingPage />} />
 
-                {/* Protected routes */}
-                <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
-                <Route path="/player" element={<ProtectedRoute><Player /></ProtectedRoute>} />
+                  {/* Protected routes */}
+                  <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+                  <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                  <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
+                  <Route path="/player" element={<ProtectedRoute><Player /></ProtectedRoute>} />
 
-                {/* 404 route */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
-        </PlayerProvider>
+                  {/* 404 route */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </TooltipProvider>
+          </PlayerProvider>
+        </ThemeProvider>
       </SubscriptionProvider>
     </AuthProvider>
   </QueryClientProvider>

@@ -63,18 +63,18 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// OpenPod green theme
+				// OpenPod green theme - updated with darker shades
 				"pod-green": {
-					50: "#F0FDF4",
-					100: "#DCFCE7",
-					200: "#BBF7D0",
-					300: "#86EFAC",
-					400: "#4ADE80",
+					50: "#E6F4EA",
+					100: "#CEEAD6",
+					200: "#A8DAB5",
+					300: "#77C596",
+					400: "#4CAF7C",
 					500: "#10B981", // primary green
-					600: "#059669",
-					700: "#047857",
-					800: "#065F46",
-					900: "#064E3B",
+					600: "#0B875F",
+					700: "#086F4E", // darker green
+					800: "#05503A", // even darker
+					900: "#033929", // darkest
 				},
 			},
 			borderRadius: {
