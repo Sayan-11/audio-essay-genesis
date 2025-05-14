@@ -1,22 +1,33 @@
 
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { toast } from '@/components/ui/use-toast';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { loginWithGoogle } = useAuth();
-  const [isLoading, setIsLoading] = useState(false);
+  const location = useLocation();
+  const { loginWithGoogle, isAuthenticated, isLoading } = useAuth();
+  const [isProcessing, setIsProcessing] = useState(false);
+  
+  // Get redirect path from location state or default to dashboard
+  const from = location.state?.from || '/dashboard';
+  
+  // If user is already authenticated, redirect them
+  useEffect(() => {
+    if (isAuthenticated && !isLoading) {
+      console.log('Login page - Already authenticated, redirecting to:', from);
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, isLoading, navigate, from]);
 
   const handleGoogleLogin = async () => {
-    setIsLoading(true);
+    setIsProcessing(true);
     try {
       await loginWithGoogle();
-      navigate('/pricing');
+      console.log('Login successful, redirecting to:', from);
+      // The useEffect above will handle the redirect
     } catch (error) {
       toast({
         variant: "destructive",
@@ -24,7 +35,7 @@ const Login = () => {
         description: "Could not log in with Google. Please try again.",
       });
     } finally {
-      setIsLoading(false);
+      setIsProcessing(false);
     }
   };
 
@@ -45,7 +56,7 @@ const Login = () => {
           
           <Button
             onClick={handleGoogleLogin}
-            disabled={isLoading}
+            disabled={isProcessing || isLoading}
             className="w-full py-6 bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 relative"
           >
             <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
@@ -68,7 +79,7 @@ const Login = () => {
                 />
               </svg>
             </div>
-            <span>{isLoading ? 'Signing in...' : 'Continue with Google'}</span>
+            <span>{isProcessing ? 'Signing in...' : 'Continue with Google'}</span>
           </Button>
         </div>
         

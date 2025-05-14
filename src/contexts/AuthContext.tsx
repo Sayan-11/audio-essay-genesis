@@ -20,24 +20,26 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Fix: Define AuthProvider as a proper React functional component
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   
   // Check for existing session on mount
   useEffect(() => {
-    // Simulate checking auth state
     const checkAuthState = () => {
       setIsLoading(true);
-      // For demo purposes, check localStorage for a user
-      const savedUser = localStorage.getItem('openpod_user');
-      
-      if (savedUser) {
-        setUser(JSON.parse(savedUser));
+      try {
+        // For demo purposes, check localStorage for a user
+        const savedUser = localStorage.getItem('openpod_user');
+        
+        if (savedUser) {
+          setUser(JSON.parse(savedUser));
+        }
+      } catch (error) {
+        console.error("Error checking auth state:", error);
+      } finally {
+        setIsLoading(false);
       }
-      
-      setIsLoading(false);
     };
     
     checkAuthState();

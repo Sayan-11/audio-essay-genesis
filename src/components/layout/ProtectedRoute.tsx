@@ -1,9 +1,16 @@
 
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useEffect } from 'react';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, isLoading } = useAuth();
+  const location = useLocation();
+
+  // For debugging
+  useEffect(() => {
+    console.log('ProtectedRoute - Auth state:', { isAuthenticated, isLoading, path: location.pathname });
+  }, [isAuthenticated, isLoading, location]);
 
   if (isLoading) {
     return (
@@ -17,7 +24,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" />;
+    // Store the attempted URL for redirecting after login
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
   return <>{children}</>;
