@@ -20,6 +20,22 @@ const BottomNav = () => {
     setShowMiniPlayer(!!currentAudio && location.pathname !== '/player');
   }, [currentAudio, location]);
 
+  // Calculate progress width safely
+  const getProgressWidth = () => {
+    if (!currentAudio || !('currentTime' in currentAudio) || !('duration' in currentAudio)) {
+      return '0%';
+    }
+    
+    const currentTime = Number(currentAudio.currentTime);
+    const duration = Number(currentAudio.duration);
+    
+    if (isNaN(currentTime) || isNaN(duration) || duration <= 0) {
+      return '0%';
+    }
+    
+    return `${(currentTime / duration) * 100}%`;
+  };
+
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-background border-t border-pod-green-100 z-40">
       {/* Mini player */}
@@ -33,10 +49,7 @@ const BottomNav = () => {
             <div className="h-1 bg-pod-green-200 rounded-full mt-1">
               <div 
                 className="h-full bg-pod-green-500 rounded-full" 
-                style={{ 
-                  width: `${currentAudio && 'currentTime' in currentAudio && 'duration' in currentAudio ? 
-                    (currentAudio.duration > 0 ? (currentAudio.currentTime / currentAudio.duration) * 100 : 0) : 0}%` 
-                }}
+                style={{ width: getProgressWidth() }}
               ></div>
             </div>
           </div>
